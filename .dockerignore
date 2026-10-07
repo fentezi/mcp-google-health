@@ -1,0 +1,14 @@
+.git
+.gitignore
+.idea
+.vscode
+.claude
+CLAUDE.md
+Dockerfile
+.dockerignore
+
+*.env
+.env*
+!example.env
+
+token.json
