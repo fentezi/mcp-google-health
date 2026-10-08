@@ -10,6 +10,7 @@
 - `pageToken` input for fetching further pages.
 - Re-authorization without restart when the refresh token is revoked.
 - golangci-lint configuration.
+- Makefile: local `run`/`build`, Docker run with `.env`, ports and token volume.
 
 ### Security
 - Login URL requires a one-time key printed in the logs.

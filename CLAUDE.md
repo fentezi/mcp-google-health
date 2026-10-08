@@ -19,7 +19,7 @@ golangci-lint fmt ./...
 docker build -t googlehealth-mcp .
 ```
 
-No Makefile or CI exist yet. Tests use testify.
+No CI yet; `Makefile` wraps the commands above (`make run` locally, `make docker-run` in Docker). Tests use testify.
 
 ## Architecture
 
