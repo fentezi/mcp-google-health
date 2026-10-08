@@ -11,14 +11,14 @@ An MCP (Model Context Protocol) server exposing Google Health API (`google.golan
 ```sh
 go build ./...
 go run ./cmd/main                          # reads .env via godotenv; see example.env
-go test ./...
+go test -race ./...
 go test ./internal/<pkg> -run TestName     # single test
 go vet ./...
 gofmt -l .
 docker build -t googlehealth-mcp .
 ```
 
-No tests, Makefile, linter config, or CI exist yet.
+No Makefile, linter config, or CI exist yet. Tests use testify.
 
 ## Architecture
 
