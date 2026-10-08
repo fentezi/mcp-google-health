@@ -94,10 +94,10 @@ func TestAuth_validToken_Refresh(t *testing.T) {
 
 			switch {
 			case tt.wantErrIs != nil:
-				assert.ErrorIs(t, err, tt.wantErrIs)
+				require.ErrorIs(t, err, tt.wantErrIs)
 			case tt.wantErr != "":
-				assert.ErrorContains(t, err, tt.wantErr)
-				assert.NotErrorIs(t, err, ErrNotAuthorized)
+				require.ErrorContains(t, err, tt.wantErr)
+				require.NotErrorIs(t, err, ErrNotAuthorized)
 			default:
 				require.NoError(t, err)
 				assert.Equal(t, tt.wantAccess, token.AccessToken)
@@ -147,7 +147,10 @@ func TestAuth_Client(t *testing.T) {
 		}))
 		t.Cleanup(api.Close)
 
-		_, err := a.Client(t.Context()).Get(api.URL)
+		resp, err := a.Client(t.Context()).Get(api.URL)
+		if err == nil {
+			resp.Body.Close()
+		}
 
 		assert.ErrorIs(t, err, ErrNotAuthorized)
 	})

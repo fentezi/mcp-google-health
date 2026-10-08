@@ -11,10 +11,11 @@ import (
 	"testing/synctest"
 	"time"
 
-	"github.com/fentezi/mcp-google-health/internal/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/oauth2"
+
+	"github.com/fentezi/mcp-google-health/internal/config"
 )
 
 const testRedirectURL = "http://localhost:8080/oauth/callback"
@@ -182,7 +183,7 @@ func TestAuth_LoginHandler_RejectsInvalidKey(t *testing.T) {
 			t.Parallel()
 
 			rec := httptest.NewRecorder()
-			a.LoginHandler(rec, httptest.NewRequest(http.MethodGet, tt.target, nil))
+			a.LoginHandler(rec, httptest.NewRequest(http.MethodGet, tt.target, http.NoBody))
 
 			assert.Equal(t, http.StatusForbidden, rec.Code)
 		})
@@ -195,7 +196,7 @@ func TestAuth_LoginHandler_RedirectsToConsent(t *testing.T) {
 	a := newTestAuth(t, filepath.Join(t.TempDir(), "token.json"))
 
 	rec := httptest.NewRecorder()
-	a.LoginHandler(rec, httptest.NewRequest(http.MethodGet, a.LoginURL(), nil))
+	a.LoginHandler(rec, httptest.NewRequest(http.MethodGet, a.LoginURL(), http.NoBody))
 
 	require.Equal(t, http.StatusFound, rec.Code)
 	location, err := url.Parse(rec.Header().Get("Location"))
@@ -280,7 +281,7 @@ func TestAuth_CallbackHandler(t *testing.T) {
 
 			rec := httptest.NewRecorder()
 			target := a.CallbackPath() + "?" + tt.query(a.newState()).Encode()
-			a.CallbackHandler(rec, httptest.NewRequest(http.MethodGet, target, nil))
+			a.CallbackHandler(rec, httptest.NewRequest(http.MethodGet, target, http.NoBody))
 
 			assert.Equal(t, tt.wantCode, rec.Code)
 			assert.Equal(t, tt.wantAuthorize, a.Authorized())
@@ -297,7 +298,7 @@ func TestAuth_CallbackHandler_PersistsToken(t *testing.T) {
 
 	rec := httptest.NewRecorder()
 	query := url.Values{"code": {"code"}, "state": {a.newState()}}
-	a.CallbackHandler(rec, httptest.NewRequest(http.MethodGet, a.CallbackPath()+"?"+query.Encode(), nil))
+	a.CallbackHandler(rec, httptest.NewRequest(http.MethodGet, a.CallbackPath()+"?"+query.Encode(), http.NoBody))
 	require.Equal(t, http.StatusOK, rec.Code)
 
 	saved, err := tokenFromFile(path)
@@ -314,9 +315,9 @@ func TestAuth_CallbackHandler_StateIsSingleUse(t *testing.T) {
 	target := a.CallbackPath() + "?" + url.Values{"code": {"code"}, "state": {a.newState()}}.Encode()
 
 	first := httptest.NewRecorder()
-	a.CallbackHandler(first, httptest.NewRequest(http.MethodGet, target, nil))
+	a.CallbackHandler(first, httptest.NewRequest(http.MethodGet, target, http.NoBody))
 	replay := httptest.NewRecorder()
-	a.CallbackHandler(replay, httptest.NewRequest(http.MethodGet, target, nil))
+	a.CallbackHandler(replay, httptest.NewRequest(http.MethodGet, target, http.NoBody))
 
 	assert.Equal(t, http.StatusOK, first.Code)
 	assert.Equal(t, http.StatusBadRequest, replay.Code)

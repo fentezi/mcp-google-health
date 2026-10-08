@@ -8,14 +8,15 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/fentezi/mcp-google-health/internal/auth"
-	"github.com/fentezi/mcp-google-health/internal/config"
-	"github.com/fentezi/mcp-google-health/internal/mcpserver"
-	"github.com/fentezi/mcp-google-health/internal/server"
 	"github.com/gorilla/mux"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/api/health/v4"
 	"google.golang.org/api/option"
+
+	"github.com/fentezi/mcp-google-health/internal/auth"
+	"github.com/fentezi/mcp-google-health/internal/config"
+	"github.com/fentezi/mcp-google-health/internal/mcpserver"
+	"github.com/fentezi/mcp-google-health/internal/server"
 )
 
 type App struct {
@@ -82,7 +83,7 @@ func (a *App) serve(ctx context.Context, name string, srv *http.Server) error {
 	case <-ctx.Done():
 	}
 
-	shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	shutdownCtx, cancel := context.WithTimeout(context.WithoutCancel(ctx), 5*time.Second)
 	defer cancel()
 	if err := srv.Shutdown(shutdownCtx); err != nil {
 		return fmt.Errorf("%s server shutdown: %w", name, err)

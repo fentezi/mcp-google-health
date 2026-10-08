@@ -9,11 +9,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/fentezi/mcp-google-health/internal/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/api/health/v4"
 	"google.golang.org/api/option"
+
+	"github.com/fentezi/mcp-google-health/internal/config"
 )
 
 func newTestApp() *App {
@@ -70,7 +71,7 @@ func TestApp_serve_ShutdownEndsOpenStreams(t *testing.T) {
 
 	select {
 	case err := <-done:
-		assert.NoError(t, err)
+		require.NoError(t, err)
 	case <-time.After(10 * time.Second):
 		t.Fatal("serve did not return after context cancellation")
 	}
@@ -113,7 +114,7 @@ func TestApp_newMCPServer(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			req := httptest.NewRequest(tt.method, tt.target, nil)
+			req := httptest.NewRequest(tt.method, tt.target, http.NoBody)
 			if tt.authorization != "" {
 				req.Header.Set("Authorization", tt.authorization)
 			}

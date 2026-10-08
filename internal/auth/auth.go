@@ -13,9 +13,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/fentezi/mcp-google-health/internal/config"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/endpoints"
+
+	"github.com/fentezi/mcp-google-health/internal/config"
 )
 
 // ErrNotAuthorized is returned by the client's token source when no usable token exists.
@@ -97,9 +98,9 @@ func (a *Auth) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	url := a.oauthConfig.AuthCodeURL(a.newState(), oauth2.AccessTypeOffline, oauth2.ApprovalForce)
+	consentURL := a.oauthConfig.AuthCodeURL(a.newState(), oauth2.AccessTypeOffline, oauth2.ApprovalForce)
 	a.log.Info("redirecting to google consent screen")
-	http.Redirect(w, r, url, http.StatusFound)
+	http.Redirect(w, r, consentURL, http.StatusFound)
 }
 
 // CallbackHandler must be served at CallbackPath.

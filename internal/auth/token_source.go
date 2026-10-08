@@ -12,7 +12,7 @@ import (
 )
 
 type tokenSource struct {
-	ctx  context.Context
+	ctx  context.Context //nolint:containedctx // oauth2.TokenSource.Token takes no context
 	auth *Auth
 }
 
@@ -38,8 +38,8 @@ func (a *Auth) validToken(ctx context.Context) (*oauth2.Token, error) {
 	if errors.As(err, &retrieveErr) && retrieveErr.ErrorCode == "invalid_grant" {
 		a.log.Warn("refresh token rejected, re-authorization required", "login_url", a.loginURL)
 		a.token = nil
-		if err := os.Remove(a.tokenFile); err != nil && !errors.Is(err, os.ErrNotExist) {
-			a.log.Error("could not remove rejected token file", "error", err)
+		if removeErr := os.Remove(a.tokenFile); removeErr != nil && !errors.Is(removeErr, os.ErrNotExist) {
+			a.log.Error("could not remove rejected token file", "error", removeErr)
 		}
 		return nil, ErrNotAuthorized
 	}
@@ -55,7 +55,7 @@ func (a *Auth) validToken(ctx context.Context) (*oauth2.Token, error) {
 }
 
 func tokenFromFile(path string) (*oauth2.Token, error) {
-	f, err := os.Open(path)
+	f, err := os.Open(path) //nolint:gosec // path comes from trusted config
 	if err != nil {
 		return nil, err
 	}
@@ -82,8 +82,8 @@ func saveToken(path string, token *oauth2.Token) error {
 	tmp := f.Name()
 	defer os.Remove(tmp)
 
-	if err := json.NewEncoder(f).Encode(token); err != nil {
-		f.Close()
+	if err := json.NewEncoder(f).Encode(token); err != nil { //nolint:gosec // persisting the token is the purpose
+		_ = f.Close()
 		return fmt.Errorf("encode token: %w", err)
 	}
 	if err := f.Close(); err != nil {

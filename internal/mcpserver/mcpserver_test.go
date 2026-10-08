@@ -7,12 +7,13 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/fentezi/mcp-google-health/internal/mcpserver"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/api/health/v4"
 	"google.golang.org/api/option"
+
+	"github.com/fentezi/mcp-google-health/internal/mcpserver"
 )
 
 // newSession connects an MCP client to a server whose Health client talks to api.
@@ -244,7 +245,7 @@ func TestRequireBearerToken(t *testing.T) {
 
 			var reached bool
 			next := http.HandlerFunc(func(http.ResponseWriter, *http.Request) { reached = true })
-			req := httptest.NewRequest(http.MethodPost, "/mcp", nil)
+			req := httptest.NewRequest(http.MethodPost, "/mcp", http.NoBody)
 			if tt.authorization != "" {
 				req.Header.Set("Authorization", tt.authorization)
 			}

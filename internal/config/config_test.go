@@ -4,9 +4,10 @@ import (
 	"os"
 	"testing"
 
-	"github.com/fentezi/mcp-google-health/internal/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/fentezi/mcp-google-health/internal/config"
 )
 
 var optionalVars = []string{

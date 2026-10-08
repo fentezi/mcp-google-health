@@ -7,11 +7,12 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
 	"github.com/fentezi/mcp-google-health/internal/auth"
 	"github.com/fentezi/mcp-google-health/internal/config"
 	"github.com/fentezi/mcp-google-health/internal/server"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func newTestAuth(t *testing.T) *auth.Auth {
@@ -48,7 +49,7 @@ func TestNew_Routes(t *testing.T) {
 			t.Parallel()
 
 			rec := httptest.NewRecorder()
-			srv.Handler.ServeHTTP(rec, httptest.NewRequest(tt.method, tt.target, nil))
+			srv.Handler.ServeHTTP(rec, httptest.NewRequest(tt.method, tt.target, http.NoBody))
 
 			assert.Equal(t, tt.wantCode, rec.Code)
 		})

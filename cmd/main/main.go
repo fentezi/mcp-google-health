@@ -12,6 +12,12 @@ import (
 )
 
 func main() {
+	if err := run(); err != nil {
+		os.Exit(1)
+	}
+}
+
+func run() error {
 	cfg := config.MustLoad()
 	log := logger.New(cfg.LogLevel)
 
@@ -20,6 +26,7 @@ func main() {
 
 	if err := app.New(*cfg, log).Run(ctx); err != nil {
 		log.Error("app run failed", "error", err)
-		os.Exit(1)
+		return err
 	}
+	return nil
 }

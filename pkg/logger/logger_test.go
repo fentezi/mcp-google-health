@@ -4,8 +4,9 @@ import (
 	"log/slog"
 	"testing"
 
-	"github.com/fentezi/mcp-google-health/pkg/logger"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/fentezi/mcp-google-health/pkg/logger"
 )
 
 func TestNew_Level(t *testing.T) {
