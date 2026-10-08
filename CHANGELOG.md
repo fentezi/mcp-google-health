@@ -11,6 +11,8 @@
 - Re-authorization without restart when the refresh token is revoked.
 - golangci-lint configuration.
 - Makefile: local `run`/`build`, Docker run with `.env`, ports and token volume.
+- CI: lint, tests, govulncheck, Docker build.
+- Dependabot for GitHub Actions and Go modules.
 
 ### Security
 - Login URL requires a one-time key printed in the logs.
