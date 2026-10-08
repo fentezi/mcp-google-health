@@ -14,11 +14,12 @@ go run ./cmd/main                          # reads .env via godotenv; see exampl
 go test -race ./...
 go test ./internal/<pkg> -run TestName     # single test
 go vet ./...
-gofmt -l .
+golangci-lint run ./...
+golangci-lint fmt ./...
 docker build -t googlehealth-mcp .
 ```
 
-No Makefile, linter config, or CI exist yet. Tests use testify.
+No Makefile or CI exist yet. Tests use testify.
 
 ## Architecture
 

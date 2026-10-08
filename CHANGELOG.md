@@ -9,6 +9,7 @@
 - Docker image.
 - `pageToken` input for fetching further pages.
 - Re-authorization without restart when the refresh token is revoked.
+- golangci-lint configuration.
 
 ### Security
 - Login URL requires a one-time key printed in the logs.

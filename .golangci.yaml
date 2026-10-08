@@ -1,0 +1,133 @@
+version: "2"
+
+run:
+  timeout: 5m
+  tests: true
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+linters:
+  default: standard            # errcheck, govet, ineffassign, staticcheck, unused
+  enable:
+    # bugs
+    - asasalint
+    - bodyclose
+    - contextcheck
+    - durationcheck
+    - errchkjson
+    - errorlint
+    - forcetypeassert
+    - gocheckcompilerdirectives
+    - gosec
+    - musttag
+    - nilerr
+    - nilnesserr
+    - nilnil
+    - noctx
+    - reassign
+    - wastedassign
+    # style / naming
+    - errname
+    - gocritic
+    - godot
+    - misspell
+    - nolintlint
+    - perfsprint
+    - predeclared
+    - revive
+    - unconvert
+    - unparam
+    - usestdlibvars
+    - whitespace
+    # complexity
+    - gocognit
+    - nestif
+    # context / logging
+    - containedctx
+    - fatcontext
+    - sloglint
+    - loggercheck
+    # tests
+    - testifylint
+    - thelper
+    - tparallel
+    - usetesting
+    # modernization
+    - copyloopvar
+    - intrange
+    - modernize
+    - exptostd
+    - canonicalheader
+
+  settings:
+    errcheck:
+      check-type-assertions: true
+    govet:
+      enable-all: true
+      disable:
+        - fieldalignment       # micro-optimisation, noisy
+    gocritic:
+      enabled-tags: [diagnostic, performance, style]
+      disabled-checks:
+        - hugeParam            # health.* structs passed by value from generated API
+        - unnamedResult
+    gocognit:
+      min-complexity: 20
+    nestif:
+      min-complexity: 5
+    revive:
+      rules:                   # explicit list; revive defaults require doc comments on all exports
+        - name: blank-imports
+        - name: context-as-argument
+        - name: context-keys-type
+        - name: dot-imports
+        - name: error-return
+        - name: error-strings
+        - name: error-naming
+        - name: increment-decrement
+        - name: var-naming
+        - name: range
+        - name: receiver-naming
+        - name: indent-error-flow
+        - name: superfluous-else
+        - name: unreachable-code
+        - name: redefines-builtin-id
+        - name: unused-parameter
+        - name: early-return
+        - name: unexported-return
+    sloglint:
+      kv-only: false
+      attr-only: false
+      no-global: ""
+      context: ""
+      static-msg: true
+      key-naming-case: snake   # matches existing `login_url`
+    nolintlint:
+      require-explanation: true
+      require-specific: true
+    usetesting:
+      os-temp-dir: true
+    testifylint:
+      enable-all: true
+
+  exclusions:
+    generated: lax
+    presets:
+      - std-error-handling     # e.g. unchecked (*os.File).Close, fmt.Fprint*
+    rules:
+      - path: _test\.go
+        linters: [gosec, errchkjson, forcetypeassert, gocognit, containedctx, noctx]
+
+formatters:
+  enable:
+    - gofumpt
+    - goimports
+  settings:
+    gofumpt:
+      extra:
+        group-params: true
+    goimports:
+      local-prefixes:
+        - github.com/fentezi/mcp-google-health
